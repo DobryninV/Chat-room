@@ -1,0 +1,36 @@
+.chat-footer {
+  height: 8%;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  background: rgb(211, 211, 211);
+}
+
+.chat-footer input, button {
+  margin: 13px;
+}
+
+.chat-footer-text-input {
+  width: 70%;
+  border-radius: 15px;
+  border: 1px solid #fff;
+  background: rgb(243, 243, 243);
+  outline: none;
+}
+
+.chat-footer-button {
+  background: none;
+  border: none;
+  width: 50px;
+}
+
+.chat-footer-image-label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+}
+
+.chat-footer-image-input {
+  display: none;
+}

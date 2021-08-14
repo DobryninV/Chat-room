@@ -1,0 +1,23 @@
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  height: 16%;
+  background-color: rgb(211, 211, 211);
+}
+
+.chat-header h2 {
+  margin-left: 21px;
+}
+
+.chat-header-user-pic {
+  margin: 15px;
+  width: 5%;
+}
+
+@media (max-width: 668px) {
+  .chat-header-user-pic {
+    margin: 15px;
+    width: 15%;
+  }
+}

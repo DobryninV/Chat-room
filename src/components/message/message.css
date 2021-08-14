@@ -41,3 +41,27 @@
   width: 30%;
   height: max-content;
 }
+
+@media (max-width: 768px) {
+  .chat-item-user-image {
+    width: 10%;
+  }
+
+  .chat-item-message-image {
+    width: 50%;
+    height: max-content;
+  }
+}
+@media (max-width: 411px) {
+  .chat-item-user-image {
+    width: 15%;
+  }
+
+  .chat-item {
+    margin-left: 5px;
+    padding: 10px;  
+  }
+  .chat-item-self {
+    margin-right: 5px; 
+  }
+}
