@@ -22,6 +22,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "dev": "concurrently \"npm run server\" \"npm run start\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "server": "nodemon server.js",
@@ -47,6 +48,7 @@
     ]
   },
   "devDependencies": {
+    "concurrently": "^6.2.1",
     "nodemon": "^2.0.12"
   },
   "description": "Приложение состоит из двух страниц, авторизации и чат комнаты. После авторизации юзеру присваивается рандомное имя и автарка, url которой приходит с сервера(для примера реализованно через Promise). К сообщениям можно прикрепить картинку кодированную в base64.",

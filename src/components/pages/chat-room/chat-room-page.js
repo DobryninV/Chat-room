@@ -1,42 +1,39 @@
 import { useState, useEffect, useCallback } from 'react';
 import { connect } from "react-redux";
-import { NewMessage, UpdateUsers, SendMessage, RemoveMessage, UpdateMessages } from "../../../actions";
+import { NewMessage, UpdateUsers, RemoveMessage, UpdateMessages } from "../../../actions";
 import { socket } from "../../../services";
 import Message from '../../message';
-import SendIcon from '@material-ui/icons/Send';
-import LibraryAddIcon from '@material-ui/icons/LibraryAdd';
-import PlusOneIcon from '@material-ui/icons/PlusOne';
+import Header from './header';
 
 import "./chat-room-page.css";
+import Footer from './footer/footer';
 
-const getBase64 = (file) => new Promise((res, rej) => {
-  let reader = new FileReader();
-  reader.readAsDataURL(file);
-  reader.onload = () => res(reader.result);
-  reader.onerror = (error) => rej(error);
-})
 
-const ChatRoomPage = ({ loginUser, users, messages, updateUsers, sendMessage, newMessage, delMessage, updateMessages }) => {
+const ChatRoomPage = ({ loginUser, users, messages, updateUsers, newMessage, delMessage, updateMessages }) => {
 
-  const [message, setMessage] = useState('');
-  const [picture, setPicture] = useState(null);
   const [isNewMessages, setNewMessages] = useState(false); // флаг сигнализирующий что пришло новое сообщение
 
-  const onSendMessage = () => {
-    const indx = messages.length ? messages[messages.length -1].messageId + 1 : 0;
-    sendMessage({messageId: indx, userId: loginUser.userId, text: message, img: picture});
-    if (messages.length !== 0) {
-      scrollDown();
-    }
-    setMessage('');
-    setPicture(null);
+  const scrollDown = () => {
+    document.getElementById(messages[messages.length - 1].messageId.toString()).scrollIntoView();
   }
 
-  const pressHandler = (event) => {
-    if (event.key === 'Enter' ) {
-      onSendMessage()
-    }
+  const takeElementsParam = () => {
+    const chatScrollHeight = document.querySelector('.chat-list').scrollHeight;
+    const chatScrollTop= document.querySelector('.chat-list').scrollTop;
+    const chatClientHeight = document.querySelector('.chat-list').clientHeight;
+    const headerClientHeight = document.querySelector('.chat-header').clientHeight;
+
+    return [ chatScrollHeight, chatScrollTop, chatClientHeight, headerClientHeight ]
   }
+
+  const checkScroll = useCallback((e) => {
+    const [ chatScrollHeight, chatScrollTop, chatClientHeight ] = takeElementsParam()
+
+    if (chatScrollHeight - chatScrollTop - 100 <= chatClientHeight) {
+      document.querySelector('.chat-list').removeEventListener('scroll', checkScroll)
+      setNewMessages(false)
+    }
+  }, [])
 
   useEffect(() => {
     socket.on('USER:UPDATE', (users) => {
@@ -58,16 +55,9 @@ const ChatRoomPage = ({ loginUser, users, messages, updateUsers, sendMessage, ne
 
   }, [newMessage, updateUsers, updateMessages, delMessage]);
 
-  const scrollDown = () => {
-    document.getElementById(messages[messages.length - 1].messageId.toString()).scrollIntoView();
-  }
-
   useEffect(() => {
     if (messages.length !== 0) {
-      const chatScrollHeight = document.querySelector('.chat-list').scrollHeight;
-      const chatScrollTop= document.querySelector('.chat-list').scrollTop;
-      const chatClientHeight = document.querySelector('.chat-list').clientHeight;
-      const headerClientHeight = document.querySelector('.chat-header').clientHeight;
+      const [ chatScrollHeight, chatScrollTop, chatClientHeight, headerClientHeight ] = takeElementsParam()
 
       if (chatScrollHeight - chatScrollTop - headerClientHeight - (chatClientHeight * 0.1) < chatClientHeight) {
         scrollDown()
@@ -77,17 +67,6 @@ const ChatRoomPage = ({ loginUser, users, messages, updateUsers, sendMessage, ne
     }
   }, [ messages ])
 
-  const checkScroll = useCallback((e) => {
-    const chatScrollHeight = document.querySelector('.chat-list').scrollHeight;
-    const chatScrollTop= document.querySelector('.chat-list').scrollTop;
-    const chatClientHeight = document.querySelector('.chat-list').clientHeight;
-
-    if (chatScrollHeight - chatScrollTop - 100 <= chatClientHeight) {
-      document.querySelector('.chat-list').removeEventListener('scroll', checkScroll)
-      setNewMessages(false)
-    }
-  }, [])
-
   useEffect(() => {
     if (isNewMessages) {
       document.querySelector('.chat-list').addEventListener('scroll', checkScroll)
@@ -96,10 +75,7 @@ const ChatRoomPage = ({ loginUser, users, messages, updateUsers, sendMessage, ne
 
   return (
     <div className="chat">
-      <header className="chat-header">
-        <img className="user-pic" src={loginUser.userImgUrl} alt="user pic"/>
-        <h2>{loginUser.name}</h2>
-      </header>
+      <Header loginUser={loginUser}/>
       <div className="chat-container">
         <div className="sidebar">
           <ul>
@@ -119,32 +95,7 @@ const ChatRoomPage = ({ loginUser, users, messages, updateUsers, sendMessage, ne
         </div>
         { isNewMessages && <button className='new-message' onClick={scrollDown}>Что-то пришло</button>}
       </div>
-      <footer className="chat-footer">
-        <input 
-          type="text" 
-          className="chat-footer-text-input"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          onKeyPress={pressHandler}/>
-        <label 
-          className="chat-footer-image-label">
-          <input 
-            type="file"
-            onChange={(e) => e.target.files && getBase64(e.target.files[0]).then((o) => setPicture(o))}
-            accept='image/,.png,.jpeg,.jpg'
-            className="chat-footer-image-input"/>
-
-            { picture ? <PlusOneIcon />
-            : <LibraryAddIcon />
-            }
-        </label>
-        
-        <button 
-          className="chat-footer-button"
-          onClick={onSendMessage} >
-          <SendIcon />
-        </button>
-      </footer>
+      <Footer scrollDown={scrollDown}/>
     </div>
   )
 }
@@ -153,7 +104,6 @@ const mapStateToProps = ({ loginUser, users, messages }) => { return { loginUser
 const mapDispatchToProps = (dispatch) => { 
   return {
     updateUsers: (users) => dispatch(UpdateUsers(users)),
-    sendMessage: (msg) => dispatch(SendMessage(msg)),
     newMessage: (msg) => dispatch(NewMessage(msg)),
     updateMessages: (msgs) => dispatch(UpdateMessages(msgs)),
     delMessage: (msgId) => dispatch(RemoveMessage(msgId))
