@@ -1,0 +1,28 @@
+
+.login-page {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-page-card {
+  padding: 18px;
+  border: 1px solid rgb(51, 51, 51);
+  border-radius: 15px;
+  background-color: rgb(238, 238, 238);
+  text-align: center;
+}
+
+.login-page-card h1, p {
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.btn-join {
+  background-color: rgb(9, 255, 0);
+  padding: 5px;
+  font-size: 20px;
+  border: 1px solid rgb(51, 51, 51);
+  border-radius: 5px;
+}
