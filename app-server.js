@@ -8,6 +8,6 @@ app.get('/', (req, res) => {
   res.send('<h1>Hello</h2>');
 });
 
-app.listen(8080, () => {
-  console.log("app start on 8080 post");
+app.listen(80, () => {
+  console.log("app start on 80 post");
 });
