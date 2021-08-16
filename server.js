@@ -14,6 +14,9 @@ const io = new Server(server, {
  * @roomData - хранит на сервере данные пользователей подключенных к комнате и сообщения с картинками 
  */
 const roomData = new Map();
+const port = process.env.PORT || 80;
+
+app.use(express.static(__dirname + "/build"));
 
 app.get('/', (req, res) => {
   res.json('Hello World')
@@ -72,6 +75,6 @@ io.on('connection', (socket) => {
 });
 
 
-server.listen(9090, () => {
-  console.log('app staring on 9090 port...');
+server.listen(port, () => {
+  console.log('app staring on port port...');
 });
