@@ -28,7 +28,6 @@
     "server": "nodemon server.js",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://localhost:9090",
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -61,5 +60,6 @@
     "redux-thank"
   ],
   "author": "Dobrynin Vladimir A. <Dobrynin.ofice@yandex.ru>",
-  "license": "ISC"
+  "license": "ISC",
+  "postinstall" : "npm run build"
 }

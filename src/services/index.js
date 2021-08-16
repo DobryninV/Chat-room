@@ -1,6 +1,6 @@
 import io from "socket.io-client"; 
 
-const socket = io(); // 'http://localhost:3001', { transports: ['websocket', 'polling', 'flashsocket'] }
+const socket = io(); // 'http://localhost:9090', { transports: ['websocket', 'polling', 'flashsocket'] }
 
 const getUserPicUrl = () => {
   return new Promise((res) => {

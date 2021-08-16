@@ -5,6 +5,3 @@
 
 * Стек react, redux, socket.io, redux-thank.
 * Для иконок использован material-ui/icons
-
-todo: 
-* Рефакторинг кода
