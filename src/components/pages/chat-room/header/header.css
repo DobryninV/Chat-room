@@ -13,11 +13,6 @@
 .chat-header-user-pic {
   margin: 15px;
   width: 5%;
-}
-
-@media (max-width: 668px) {
-  .chat-header-user-pic {
-    margin: 15px;
-    width: 15%;
-  }
+  min-width: 75px;
+  height: max-content;
 }

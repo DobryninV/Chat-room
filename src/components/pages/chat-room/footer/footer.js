@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { connect } from "react-redux";
 import { SendMessage } from '../../../../actions';
 import SendIcon from '@material-ui/icons/Send';
@@ -25,44 +25,53 @@ const Footer = ({ sendMessage, loginUser, messages, scrollDown }) => {
     }
   };
   
-  const onSendMessage = () => {
-    const indx = messages.length ? messages[messages.length -1].messageId + 1 : 0;
-    sendMessage({messageId: indx, userId: loginUser.userId, text: message, img: picture});
-    if (messages.length !== 0) {
-      scrollDown();
+  const onSendMessage = (event) => {
+    if (message.length > 0 || picture) {
+      const indx = messages.length ? messages[messages.length -1].messageId + 1 : 0;
+      sendMessage({messageId: indx, userId: loginUser.userId, text: message, img: picture});
+      if (messages.length !== 0) {
+        scrollDown();
+      }
+      setMessage('');
+      setPicture(null);
     }
-    setMessage('');
-    setPicture(null);
+    event.preventDefault();
   }
-  
-
 
   return (
     <footer className="chat-footer">
-      <input 
-        type="text" 
-        className="chat-footer-text-input"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        onKeyPress={pressHandler}/>
-      <label 
-        className="chat-footer-image-label">
+      <form
+        className="chat-form"
+        onSubmit={onSendMessage}>
         <input 
-          type="file"
-          onChange={(e) => e.target.files && getBase64(e.target.files[0]).then((o) => setPicture(o))}
-          accept='image/,.png,.jpeg,.jpg'
-          className="chat-footer-image-input"/>
+          type="text" 
+          className="chat-form-text-input"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          onKeyPress={pressHandler}/>
+        <label 
+          className="chat-form-image-label">
+          <input 
+            type="file"
+            onChange={(e) => e.target.files && getBase64(e.target.files[0]).then((o) => setPicture(o))}
+            accept='image/,.png,.jpeg,.jpg'
+            className="chat-form-image-input"/>
 
-          { picture ? <PlusOneIcon />
-          : <LibraryAddIcon />
-          }
-      </label>
-      
-      <button 
-        className="chat-footer-button"
-        onClick={onSendMessage} >
-        <SendIcon />
-      </button>
+            { picture ? <PlusOneIcon />
+            : <LibraryAddIcon />
+            }
+        </label>
+        
+        { 
+          (message || picture) &&
+          <button 
+            className="chat-form-button"
+            type="submit">
+            <SendIcon />
+          </button>
+        }
+        
+      </form>
     </footer>
   )
 }
@@ -71,7 +80,7 @@ const mapStateToProps = ({ loginUser, messages }) => { return { loginUser, messa
 
 const mapDispatchToProps = (dispatch) => { 
   return {
-    sendMessage: (msg) => dispatch(SendMessage(msg)),
+    sendMessage: (msg) => dispatch(SendMessage(msg))
   }
 };
 const connector = connect(mapStateToProps, mapDispatchToProps);
