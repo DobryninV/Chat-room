@@ -25,7 +25,7 @@ const Footer = ({ sendMessage, loginUser, messages, scrollDown }) => {
     }
   };
   
-  const onSendMessage = (event) => {
+  const onSendMessage = () => {
     if (message.length > 0 || picture) {
       const indx = messages.length ? messages[messages.length -1].messageId + 1 : 0;
       sendMessage({messageId: indx, userId: loginUser.userId, text: message, img: picture});
@@ -35,7 +35,6 @@ const Footer = ({ sendMessage, loginUser, messages, scrollDown }) => {
       setMessage('');
       setPicture(null);
     }
-    event.preventDefault();
   }
 
   return (
